@@ -10,7 +10,7 @@ For this, this scheme allows the network coordinator to form suitable clusters a
 
 First, the dataset is divided into two scenarios, considering the reads at 10 am and 4 pm. In the following, it is performed the data analysis of each scenario, using Machine Learning algorithms such as Unsupervised and Supervised Algorithms. Thus, are evaluated the K-means, DBSCAN, Hierarchical Clustering, Fuzzy-C-means, and k-NN algorithms for clustering and classification nodes in priority groups. After this step, the topology is formed considering the priority nodes identified. 
 
-The Data Analysis is described in the file named **"cluster_classific_approaches.pyinb"** and the Cluster-tree Topology Formation is described in the file named **"cluster-tree_topology_form.pyinb"**.
+The Data Analysis is described in the file named **"cluster_classific_approaches.ipynb"** and the Cluster-tree Topology Formation is described in the file named **"cluster-tree_topology_form.ipynb"**.
 
 ## Data Analysis
 - _Using K-means clustering_
