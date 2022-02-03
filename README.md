@@ -11,3 +11,15 @@ For this, this scheme allows the network coordinator to form suitable clusters a
 First, the dataset is divided into two scenarios, considering the reads at 10 am and 4 pm. In the following, it is performed the data analysis of each scenario, using Machine Learning algorithms such as Unsupervised and Supervised Algorithms. Thus, are evaluated the K-means, DBSCAN, Hierarchical Clustering, Fuzzy-C-means, and k-NN algorithms for clustering and classification nodes in priority groups. After this step, the topology is formed considering the priority nodes identified. 
 
 The Data Analysis is described in the file named **"cluster_classific_approaches.pyinb"** and the Cluster-tree Topology Formation is described in the file named **"cluster-tree_topology_form.pyinb"**.
+
+## Data Analysis
+- _Using K-means clustering_
+  - The K-means clustering is a unsupervised algorithm that identifies centroids based on the number of clusters defined.
+- _Using DBSCAN_
+  - The DBSCAN is a clustering algorithm that is based on Epsilon value for discover similar data points. 
+- _Using Hierarchical clustering_
+  - The Hierarchical clustering method builds a dendogram that allow to identify clusters with distinct glanuralities.
+- _Using Fuzzy-C-means clustering_
+  - The Fuzzy-C-means is a optimized method from K-means algorithm, that is capable to lead with outliers through the fuzzufication approach based in Sigma values.
+- _Using k-NN classifier_
+  - The k-Neares Neighbor algorithm is a supervised learning algorithm which can classify data from the training of subset, using a k number of neighbors data points.
