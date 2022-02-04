@@ -33,7 +33,7 @@ From this code we run the K-means algorithm passing the number of cluster as 2. 
 
 And the data points are ploted as follows.
 
-<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans_result_staticPlot.png"  height="220"> <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans_result_dynamicPlot.png"  height="220">
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans_result_staticPlot.png"  height="200"> <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans_result_dynamicPlot.png"  height="200">
   <p align = "left"><sup>Figure 6 (K-means results)</sup></p>
   
   In the left side of Figure 6, are shown the sensed data divided in 2 groups, been blue with lower priority and orange, higher priority. Each group contain a centroids represented by the black star.
@@ -44,14 +44,23 @@ The DBSCAN is a clustering algorithm that is based on Epsilon value for discover
 <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN_part.png"  width="680">
   <p align = "left"><sup>Figure 8 (DBSCAN code)</sup></p>
   
-  From this code the
+  From this code, the node groups are formed as follows:
   
-<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN_result_staticPlot.png"  height="220">   <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN_result_dynamicPlot.png"  height="220">
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN_nodegroups.png"  height="60">
+
+  
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN_result_staticPlot.png"  height="200">   <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN_result_dynamicPlot.png"  height="200">
 
   
 - _Using Hierarchical clustering_
   - The Hierarchical clustering method builds a dendogram that allow to identify clusters with distinct glanuralities.
 - _Using Fuzzy-C-means clustering_
-  - The Fuzzy-C-means is a optimized method from K-means algorithm, that is capable to lead with outliers through the fuzzufication approach based in Sigma values.
+The Fuzzy-C-means is a optimized method from K-means algorithm, that is capable to lead with outliers through the fuzzufication approach based in Sigma values.
+
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/fuzzycmeans_result_staticPlot.png"  height="200">   <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/fuzzycmeans_result_dynamicPlot.png"  height="200">
+
+
 - _Using k-NN classifier_
-  - The k-Neares Neighbor algorithm is a supervised learning algorithm which can classify data from the training of subset, using a k number of neighbors data points.
+The k-Neares Neighbor algorithm is a supervised learning algorithm which can classify data from the training of subset, using a k number of neighbors data points.
+
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/knn_result_staticPlot.png"  height="200">   <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/knn_result_dynamicPlot.png"  height="200">
