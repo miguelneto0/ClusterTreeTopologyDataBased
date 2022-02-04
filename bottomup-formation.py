@@ -133,7 +133,7 @@ class Node():
         return self.assoc
 
 # leitura da disposicao dos nodes no cenario Intel Lab Data
-arq = open("C:\\Users\\Miguel\\Documents\\Visual Studio 2019\\C++\\gl_projects\\topology_IntelLabData.txt")
+arq = open("C:\\Users\\Miguel\\Documents\\Github\\ClusterTreeTopologyDataBased\\topology_IntelLabData.txt")
 lines = arq.readlines()
 
 lab_ids = []
@@ -169,15 +169,15 @@ else:
     exit(0)
 
 # definicao do Nodo 2 como Coordenador na posicao central
-nodes[2].forcePosition(envirX/2,envirY/2)
-xPANC = nodes[2].posX
-yPANC = nodes[2].posY
+nodes[3].forcePosition(envirX/2,envirY/2)
+xPANC = nodes[3].posX
+yPANC = nodes[3].posY
 # print_nodes()
-print(nodes[2].checkAdjNodes())
+print(nodes[3].checkAdjNodes())
 
 # Cenario DbCTF - - nao executar esse em caso de aleatorio
 for n in nodes:
-  if n.nodeID == 40 or n.nodeID == 43 or n.nodeID == 41 or n.nodeID == 42 or n.nodeID == 33 or n.nodeID == 32 or n.nodeID == 30 or n.nodeID == 28 or n.nodeID == 29 or n.nodeID == 27 or n.nodeID == 23 or n.nodeID == 25 or n.nodeID == 24 or n.nodeID == 22 or n.nodeID == 21 or n.nodeID == 19: 
+  if n.nodeID == 26 or n.nodeID == 31  or n.nodeID == 33 or n.nodeID == 32 or n.nodeID == 30 or n.nodeID == 28 or n.nodeID == 29 or n.nodeID == 27 or n.nodeID == 23 or n.nodeID == 25 or n.nodeID == 24 or n.nodeID == 22 or n.nodeID == 21 or n.nodeID == 19: 
     n.forceDataRate(0.2)
   else:
     n.forceDataRate(0.05)
@@ -185,10 +185,10 @@ for n in nodes:
   if n.nodeID == 33:
     n.hopToPAN = 1
     n.energy = 200
-  if n.nodeID ==32 or n.nodeID ==29 or n.nodeID == 40 or n.nodeID == 43 or n.nodeID == 41:
+  if n.nodeID ==32 or n.nodeID ==29:
     n.hopToPAN = 2
     n.energy = random.randrange(100,199)
-  if n.nodeID ==42 or n.nodeID == 28 or n.nodeID == 25 or n.nodeID == 23 or n.nodeID == 27:
+  if n.nodeID == 28 or n.nodeID == 25 or n.nodeID == 23 or n.nodeID == 27:
     n.hopToPAN = 3
     n.energy = random.randrange(60,180)
   if n.nodeID ==24 or n.nodeID ==22 or n.nodeID ==21: 
@@ -201,7 +201,7 @@ for n in nodes:
 nodesNoPan = []
 
 for n in nodes:
-  if n.nodeID != 3:
+  if n.nodeID != 4:
     nodesNoPan.append(n)
 print(len(nodesNoPan))
 
@@ -223,9 +223,9 @@ def findNoAssoc(lista):
       return False
 
 # Node 3 fixado no centro como Coordenador PAN
-nodes[2].forcePosition(envirX/2,envirY/2)
-xPANC = nodes[2].posX
-yPANC = nodes[2].posY
+nodes[3].forcePosition(envirX/2,envirY/2)
+xPANC = nodes[3].posX
+yPANC = nodes[3].posY
 
 # Cria estruturas para guardar os dados de cada nodo
 posxList = [] # dados de posicao X
@@ -270,8 +270,8 @@ def plotCenario(lista,node,datarate):
   ax = plt.gca()
   ra = plt.Circle((xPANC,yPANC), node.radius, color='yellowgreen', alpha=0.5,fill=False)
   ax.add_patch(ra)
-  ax.invert_xaxis()
-  ax.invert_yaxis()
+#   ax.invert_xaxis()
+#   ax.invert_yaxis()
   plt.scatter(posxList,posyList,c=col)
   # zip joins x and y coordinates in pairs
   for x,y,l in zip(posxList,posyList,nodeIDList):
@@ -325,7 +325,7 @@ def formClusterBU(node,lista,datarate):
   count = 0
   volta = 0
   for n in lista:
-    if n.nodeID == 3 and len(n.childCH) != 0:
+    if n.nodeID == 4 and len(n.childCH) != 0:
           volta+=1
   if len(node.child) == 0 and findNoAssoc(nodesNoPan) == True and volta > 1:
         print(f'volta para procurar novo CH filho, node = {node.nodeID}')
@@ -355,7 +355,7 @@ def formClusterBU(node,lista,datarate):
       for n in ach:
         if n.assoc==False:
           aux.append(n)
-      while node.nodeID != 3 and len(node.child)==0:
+      while node.nodeID != 4 and len(node.child)==0:
         node = node.parent
         if node != None:
           print(f'voltou pro node pai {node.nodeID}')
@@ -411,7 +411,7 @@ def formClusterBU(node,lista,datarate):
 #       for n in ach:
 #         if n.assoc==False:
 #           aux.append(n)
-#       while node.nodeID != 3 and len(node.child)==0:
+#       while node.nodeID != 4 and len(node.child)==0:
 #         node = node.parent
 #         if node != None:
 #           print(f'voltou pro node pai {node.nodeID}')
@@ -433,14 +433,14 @@ def formClusterBU(node,lista,datarate):
 #   return count,idFar,datarate
 
 # plot Cenario
-plotCenario(nodes,nodes[2],None)
+plotCenario(nodes,nodes[3],None)
 
 redNodes = []
 blueNodes = []
 for n in nodes:
-    if n.nodeID != 3 and n.assoc == False and n.datarate == 0.2:
+    if n.nodeID != 4 and n.assoc == False and n.datarate == 0.2:
         redNodes.append(n)
-    elif n.nodeID != 3 and n.assoc == False and n.datarate == 0.05:
+    elif n.nodeID != 4 and n.assoc == False and n.datarate == 0.05:
         blueNodes.append(n)
 
 print(f'{len(redNodes)} nodos nao associados')
