@@ -22,9 +22,10 @@ The Data Analysis is described in the file named **"cluster_classific_approaches
 
 ## Data Analysis with Machine Learning Approaches
 - _Using K-means clustering_
-  - The K-means clustering is a unsupervised algorithm that identifies centroids based on the number of clusters defined.
-  <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans_part.png"  height="220"> <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans_part2.png"  height="220">
-  <p align = "left"><sup>Figure 4 (K-means code) and Figure 5 (labels)</sup></p>
+The K-means clustering is a unsupervised algorithm that identifies centroids based on the number of clusters defined.
+
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans_part.png"  height="220"> <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans_part2.png"  height="220">
+<p align = "left"><sup>Figure 4 (K-means code) and Figure 5 (labels)</sup></p>
 
 From this code we run the K-means algorithm passing the number of cluster as 2. In this case, 2 center points (centroids) are identified by the algorithm, considering the temperature and humidity values, for then to group the data in priority node groups. The result of this grouping is presented below, as well as the amount of nodes in blue group and red group. The nodes group are printed below, resulting in a total of 51 nodes, because the IntelLabData problem and some (4) nodes during monitoring process, with K-means identifying 34 blue nodes and 17 red nodes.
 
@@ -38,13 +39,14 @@ And the data points are ploted as follows.
   In the left side of Figure 6, are shown the sensed data divided in 2 groups, been blue with lower priority and orange, higher priority. Each group contain a centroids represented by the black star.
     
 - _Using DBSCAN_
-  - The DBSCAN is a clustering algorithm that is based on Epsilon value for discover similar data points. 
-  <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN_part.png"  width="680">
+The DBSCAN is a clustering algorithm that is based on Epsilon value for discover similar data points.
+
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN_part.png"  width="680">
   <p align = "left"><sup>Figure 8 (DBSCAN code)</sup></p>
   
   From this code the
   
-  <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN_result_staticPlot.png"  height="220">   <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN_result_dynamicPlot.png"  height="220">
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN_result_staticPlot.png"  height="220">   <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN_result_dynamicPlot.png"  height="220">
 
   
 - _Using Hierarchical clustering_
