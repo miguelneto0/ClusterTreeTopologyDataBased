@@ -24,7 +24,7 @@ The Data Analysis is described in the file named **"cluster_classific_approaches
 - _Using K-means clustering_
 The K-means clustering is a unsupervised algorithm that identifies centroids based on the number of clusters defined.
 
-<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans_part.png"  height="220"> <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans_part2.png"  height="220">
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans_part.png"  height="200"> <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans_part2.png"  height="200">
 <p align = "left"><sup>Figure 4 (K-means code) and Figure 5 (labels)</sup></p>
 
 From this code we run the K-means algorithm passing the number of cluster as 2. In this case, 2 center points (centroids) are identified by the algorithm, considering the temperature and humidity values, for then to group the data in priority node groups. The result of this grouping is presented below, as well as the amount of nodes in blue group and red group. The nodes group are printed below, resulting in a total of 51 nodes, because the IntelLabData problem and some (4) nodes during monitoring process, with K-means identifying 34 blue nodes and 17 red nodes.
@@ -57,10 +57,29 @@ The DBSCAN is a clustering algorithm that is based on Epsilon value for discover
 - _Using Fuzzy-C-means clustering_
 The Fuzzy-C-means is a optimized method from K-means algorithm, that is capable to lead with outliers through the fuzzufication approach based in Sigma values.
 
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/fuzzycmeans_nodegroups.png"  height="60">
+
+
 <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/fuzzycmeans_result_staticPlot.png"  height="200">   <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/fuzzycmeans_result_dynamicPlot.png"  height="200">
 
 
 - _Using k-NN classifier_
 The k-Neares Neighbor algorithm is a supervised learning algorithm which can classify data from the training of subset, using a k number of neighbors data points.
 
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/knn_part.png"  width="540">
+  <p align = "left"><sup>Figure 6 (DBSCAN code)</sup></p>
+
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/knn_part.2png.png"  width="480">
+  <p align = "left"><sup>Figure 7 (DBSCAN code)</sup></p>
+
 <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/knn_result_staticPlot.png"  height="200">   <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/knn_result_dynamicPlot.png"  height="200">
+
+## Cluster-tree Topology Formation
+
+Finally, after the data analysis phase, the resulting topology can be optimized and the performance and energy efficiency is improved. For each clustering and classification approach using the Machine Learning algorithms, we have the following structures and priority nodes (Figure 10-14).
+
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/kmeans10h_topology.png"  height="240">   <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/DBSCAN&hierarc10h_topology.png"  height="240"> 
+<p align = "left"><sup>Figure 10 (Resulting topology with K-means) and Figure 11 (Resulting topology with DBSCAN/Hierarc)</sup></p>
+
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/fuzzycmeans10h_topology.png"  height="240"> <img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/knn10h_topology.png"  height="240">
+<p align = "left"><sup>Figure 12 (Resulting topology with Fuzzy-C-Means) and Figure 13 (Resulting topology with KNN)</sup></p>
