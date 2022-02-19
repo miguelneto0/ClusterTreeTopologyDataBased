@@ -2,6 +2,8 @@
 
 Implementation of Topological Formation of Cluster-tree Networks based on Data Analysis detected by IoT sensor devices
 
+<img src="https://github.com/miguelneto0/ClusterTreeTopologyDataBased/blob/main/images/outline.png"  width="800">
+
 This project is part of a mechanism for building topologies cluster-tree for Wireless Sensor Networks focused on IoT large-scale applications, such as smart agriculture, disaster prevention, and industrial automation. In large-scale monitoring applications, the nodes in a monitored region can process different data rates and this fact can damage the network performance and the energy consumption of devices.
 
 To provide efficient communication, coverage, connectivity and energy, and network performance, topological formation is a key factor. In addition, the topology must be capable to lead with different scenarios, which often suffer from network modifications caused by external events, disassociation, inappropriate routes and paths between nodes and the base station, and many others.
