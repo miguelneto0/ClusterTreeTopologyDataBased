@@ -163,7 +163,7 @@ def printAchieves(node,lista):
     nachieve = node.nodesAchievable(lista)
     nassoc = node.child
     for n in nachieve:
-    	print(n.nodeID)
+        print(n.nodeID)
     print('associados:')
     for no in nassoc:
         print(no.nodeID)
