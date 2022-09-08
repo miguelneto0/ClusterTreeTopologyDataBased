@@ -354,69 +354,87 @@ int main(int argc, char const *argv[]){
 
 vector<Neighb> __neighb = read__csv(); 
 
-    cout << endl << "DADOS DE TODOS" << endl;
-    for(vector<Neighb>::iterator it = __neighb.begin();it!=__neighb.end();it++){
-        cout <<  it->nodeID << " " << it->depth << " " << it->datarate << " " << it->viz << " " << it->blue << " " << it->red << " " << it->cluster << endl;
-    }
-    cout << endl << "VIZINHOS DE TODOS" << endl;
-    
-    // Percorre a lista de vizinhos
-    for(vector<Neighb>::iterator it = __neighb.begin(); it!=__neighb.end(); it++){
-        cout << it->nodeID << " vizinhos = ";
-        it->getArrayVizinhos(it->viz);
-        for (int j=0; j < it->nViz; j++)
-            cout << it->vizinhos[j] << " ";
-        cout << endl;
-    }
-    cout << endl << "ID |\tDEPTH |\tBLUE |\tRED  \t::  somente de vermelhos" << endl;
-    
-    int somaD=0, somaH=0, somaR=0, medD=0, medH=0, a=0, medR=0, cnt=0;
-    int relacaoViz=0;
-    map<int,int> mapa;
-    string particula;
+cout << endl << "DADOS DE TODOS" << endl;
+for(vector<Neighb>::iterator it = __neighb.begin();it!=__neighb.end();it++){
+    cout <<  it->nodeID << " " << it->depth << " " << it->datarate << " " << it->viz << " " << it->blue << " " << it->red << " " << it->cluster << endl;
+}
+cout << endl << "VIZINHOS DE TODOS" << endl;
 
-    // Procura vizinhos somente de vermelhos
-    for(vector<Neighb>::iterator it = __neighb.begin(); it!=__neighb.end(); it++){  // percorre a lista de nodos
-        if (it->cluster == "vermelho"){                 // seleciona somente vermelhos
-            cnt++;
-            for ( a = 0; a < it->nViz; a++){
-                for(vector<Neighb>::iterator it_ = __neighb.begin(); it_ != __neighb.end(); it_++){
-                    if (it->vizinhos[a] == it_->nodeID){
-                        it->setHet(it->cluster, it_->cluster);
-                        if (it->cluster != it_->cluster){
-                            it->somaDepthViz(it_->depth);
-                            somaD += it_->depth;
-                            somaH += it->nHet;
-                        }else{
-                            it->somaDepthVizHom(it_->depth);
-                        }
+// Percorre a lista de vizinhos
+for(vector<Neighb>::iterator it = __neighb.begin(); it!=__neighb.end(); it++){
+    cout << it->nodeID << " vizinhos = ";
+    it->getArrayVizinhos(it->viz);
+    for (int j=0; j < it->nViz; j++)
+        cout << it->vizinhos[j] << " ";
+    cout << endl;
+}
+cout << endl << "ID |\tDEPTH |\tBLUE |\tRED  \t::  somente de vermelhos" << endl;
+
+int posi=0, somaD=0, somaH=0, somaR=0, medD=0, medH=0, a=0, medR=0, cnt=0;
+int relacaoViz=0;
+map<int,int> mapa1;
+map<int, pair<int, int>> mapa2;
+string particula1, particula2;
+
+// Procura vizinhos somente de vermelhos
+for(vector<Neighb>::iterator it = __neighb.begin(); it!=__neighb.end(); it++){  // percorre a lista de nodos
+    if (it->cluster == "vermelho"){                 // seleciona somente vermelhos
+        cnt++;
+        particula2 += '0';
+        for ( a = 0; a < it->nViz; a++){
+            for(vector<Neighb>::iterator it_ = __neighb.begin(); it_ != __neighb.end(); it_++){
+                if (it->vizinhos[a] == it_->nodeID){
+                    it->setHet(it->cluster, it_->cluster);
+                    if (it->cluster != it_->cluster){
+                        it->somaDepthViz(it_->depth);
+                        somaD += it_->depth;
+                        somaH += it->nHet;
+                    }else{
+                        it->somaDepthVizHom(it_->depth);
                     }
                 }
             }
-            mapa[it->nodeID] = it->somaViz;
-            relacaoViz = abs(it->somaViz - it->somaVizHom);
-            medD = somaD / cnt;
-            medH = somaH / cnt;
-            somaR += relacaoViz;
-            medR = somaR / cnt;
-            cout <<  it->nodeID << " \t" << it->depth << " " << "\t" << it->blue << " \t" << it->red << // "\tdifer = " << it->nHet << 
-                " \tsomaD_HET = " << it->somaViz << " \tsomaD_HOM = " << it->somaVizHom << " \tHET/D: " << (double) (it->nHet / it->depth) << // " \tpropDif: " << propDif << " \tpropDepth: " << propDep << 
-                " \trelacaoViz: " <<  relacaoViz << endl;
         }
+        mapa1[it->nodeID] = it->somaViz;
+        mapa2[it->nodeID] = make_pair(it->depth,posi);
+        posi++;
+        relacaoViz = abs(it->somaViz - it->somaVizHom);
+        medD = somaD / cnt;
+        medH = somaH / cnt;
+        somaR += relacaoViz;
+        medR = somaR / cnt;
+        cout <<  it->nodeID << " \t" << it->depth << " " << "\t" << it->blue << " \t" << it->red << // "\tdifer = " << it->nHet << 
+            " \tsomaD_HET = " << it->somaViz << " \tsomaD_HOM = " << it->somaVizHom << " \tHET/D: " << (double) (it->nHet / it->depth) << // " \tpropDif: " << propDif << " \tpropDepth: " << propDep << 
+            " \trelacaoViz: " <<  relacaoViz << endl;
+    }
+}
+// Particula 1 define como CH os nodos com somatorio de profundidade maior que a media
+for (map<int,int>::iterator mp = mapa1.begin(); mp != mapa1.end(); mp++){
+    if (mp->second > medD){
+        particula1 += '1';         // cout << "entrou aqui no " << mp->first << endl;
+    }
+    else{
+        particula1 += '0';
+    }
+}
+int d = 1;
+// Particula 2 define como CH os nodos representante de cada profundidade
+for(int w = 0; w < particula2.length(); w++){
+    for(map<int, pair<int, int>>::iterator mp = mapa2.begin(); mp != mapa2.end(); mp++){
+        // cout << mp->first << " " << mp->second.first << " " << mp->second.second << " " << d << endl;
+        if ( d == mp->second.first ){
+            // cout << "d = " << d << " it->d = " << mp->second << " w = " << w << endl;
+            particula2[mp->second.second] = '1';
+            break;
         }
-        for (map<int,int>::iterator mp = mapa.begin(); mp != mapa.end(); mp++){
-            // cout << "entrou aqui no " << mp->first << " somaD = " << medD << " second = " << mp->second << endl;
-            if (mp->second > medD){
-                // cout << "entrou aqui no " << mp->first << endl;
-                particula += '1';
-            }
-            else{
-                particula += '0';
-            }
-        }
-    cout << "a = " << a << " cnt = " << cnt << " media de vizinhos heterogeneos = " << medH << " media de profundiades = " << medD << " relacao = " << medR << endl;
-    cout << "particula = " << particula << endl;
-    cout << endl;
+    }
+    d++;
+}
+
+cout << "a = " << a << " cnt = " << cnt << " media de vizinhos heterogeneos = " << medH << " media de profundiades = " << medD << " relacao = " << medR << endl;
+cout << "particula1 = " << particula1 << endl;
+cout << "particula2 = " << particula2 << endl;
+cout << endl;
 
 /* implementacao */
     vector<Point> points = readcsv(); 
