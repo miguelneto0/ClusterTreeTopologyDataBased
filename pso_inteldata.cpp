@@ -138,6 +138,19 @@ vector<Neighb> read__csv(){
     return neighb;
 }
 
+////////////////////
+/* Funcao que retorna o somatorio de profundidade dos CHs selecionados*/
+int somatorio(string particula, map<int,pair<int, int>> mapa){
+    int soma = 0;
+    for(map<int,pair<int, int>>::iterator mp2 = mapa.begin(); mp2!=mapa.end(); mp2++){
+        for (int i=0;i<particula.length();i++){
+            if (particula[i] == '1' && i == mp2->second.second){
+                soma += mp2->second.second;
+            }
+        }              
+    }
+return soma;
+}
 
 ////////////////////
 /* Funcao que executa o algoritmo PSO */
@@ -148,29 +161,29 @@ double sigmoide(double somaInd){
 ////////////////////
 /* Funcao que executa o algoritmo PSO */
 double executa_PSO(int somaDepth, int somaInd){
-    double x_i;
     double w = 0.9, fi1 = 0.3, fi2 = 0.5, c1 = 2, c2 = 2;
     double Pb = (double) somaInd , Gb = (double) somaDepth;
     double v_i = 0;
 
-    x_i = w * v_i + c1 * fi1 * (Pb - v_i) + c2 * fi2 * (Gb - v_i);
-    
-    return x_i;
+    return (w * v_i) + (c1 * fi1 * (Pb - v_i)) + (c2 * fi2 * (Gb - v_i));
 }
-
 
 ////////////////////
 /* Funcao de velocidade da particula com deslocamento a esquerda */
-string shift_left(string particula, int vez){
+string shift_left(string particula, int vez, map<int,pair<int, int>> mapa){
         int _v = 0;
+        int otimo_old = 100, otimo_new = 0;
         while (_v <= vez){
+            otimo_old = somatorio(particula,mapa);
             string aux = "";
             char ini = particula[0];
             for(int i=1; i<particula.length(); i++)
                 aux += particula[i];
             particula = "";
             particula = aux + ini;
-            cout << particula << endl;
+            cout << particula;
+            otimo_new = somatorio(particula,mapa);
+            cout << " = " << otimo_new << " \tPSO = " << executa_PSO(otimo_old,otimo_new) << "  \tsigmoide(part3) = " << sigmoide(executa_PSO(otimo_old,otimo_new)) << endl;
             _v++;
         }
         return particula;
@@ -178,8 +191,9 @@ string shift_left(string particula, int vez){
 
 ////////////////////
 /* Funcao de velocidade da particula com deslocamento a direita */
-string shift_right(string particula, int vez){
+string shift_right(string particula, int vez, map<int,pair<int, int>> mapa){
         int _v = 0;
+        int otimo_old = 100, otimo_new = 0;
         string aux;
         while (_v <= vez){
             aux = "";
@@ -189,7 +203,9 @@ string shift_right(string particula, int vez){
                 aux += particula[i];
             particula = "";
             particula = aux;
-            cout << particula << endl;
+            cout << particula;
+            otimo_new = somatorio(particula,mapa);
+            cout << " = " << otimo_new << " \tPSO = " << executa_PSO(otimo_old,otimo_new) << "  \tsigmoide(part3) = " << sigmoide(executa_PSO(otimo_old,otimo_new)) << endl;
             _v++;
         }
         return particula;
@@ -201,10 +217,10 @@ int main(int argc, char const *argv[]){
 
 vector<Neighb> __neighb = read__csv(); 
 
-    cout << endl << "DADOS DE TODOS" << endl;
-    for(vector<Neighb>::iterator it = __neighb.begin();it!=__neighb.end();it++){
-        cout <<  it->nodeID << " " << it->depth << " " << it->datarate << " " << it->viz << " " << it->blue << " " << it->red << " " << it->cluster << endl;
-    }
+    // cout << endl << "DADOS DE TODOS" << endl;
+    // for(vector<Neighb>::iterator it = __neighb.begin();it!=__neighb.end();it++){
+    //     cout <<  it->nodeID << " " << it->depth << " " << it->datarate << " " << it->viz << " " << it->blue << " " << it->red << " " << it->cluster << endl;
+    // }
     cout << endl << "VIZINHOS DE TODOS" << endl;
 
     // Percorre a lista de vizinhos
@@ -221,7 +237,7 @@ vector<Neighb> __neighb = read__csv();
     int relacaoViz=0;
     map<int,int> mapa1;
     map<int, pair<int, int>> mapa2, mapa3;
-    string particula1, particula2;
+    string particula1, particula2, particula3;
     map<int,int> lista;
 
     // Procura vizinhos somente de vermelhos
@@ -229,6 +245,7 @@ vector<Neighb> __neighb = read__csv();
         if (it->cluster == "vermelho"){                 // seleciona somente vermelhos
             cnt++;
             particula2 += '0';
+            particula3 += '0';
             for ( a = 0; a < it->nViz; a++){
                 for(vector<Neighb>::iterator it_ = __neighb.begin(); it_ != __neighb.end(); it_++){
                     if (it->vizinhos[a] == it_->nodeID){
@@ -281,37 +298,43 @@ vector<Neighb> __neighb = read__csv();
         }
         d++;
     }
-    int totalP1 = 0, totalP2=0;
-    for(map<int,pair<int, int>>::iterator mp2 = mapa3.begin(); mp2!=mapa3.end(); mp2++){
-        for (int i=0;i<particula1.length();i++){
-            if (particula1[i] == '1' && i == mp2->second.second){
-                // cout << mp2->first << " particula1" << endl;
-                totalP1 += mp2->second.second;
+    d=4;
+    // Particula 3 define como CH os nodos representante de cada profundidade
+    for(int w = particula3.length(); w > 0; w--){
+        for(map<int, pair<int, int>>::iterator mp = mapa2.end(); mp != mapa2.begin(); mp--){
+            // cout << mp->first << " " << mp->second.first << " " << mp->second.second << " " << d << endl;
+            if ( d == mp->second.first ){
+                // cout << "d = " << d << " it->d = " << mp->second << " w = " << w << endl;
+                particula3[mp->second.second] = '1';
+                break;
             }
-            if(particula2[i] == '1' && i == mp2->second.second){
-                // cout << mp2->first << " particula2" << endl;
-                totalP2 += mp2->second.second;
-            }
-        }              
+        }
+        d--;
     }
+    int somaP1 = somatorio(particula1,mapa3);
+    int somaP2 = somatorio(particula2,mapa3);
+    int somaP3 = somatorio(particula3,mapa3);
     cout << "a = " << a << " cnt = " << cnt << " media de vizinhos heterogeneos = " << medH << " media de profundiades = " << medD << " relacao = " << medR << endl;
-    cout << "particula1 = " << particula1 << " = " << totalP1 << endl;
-    cout << "particula2 = " << particula2 << " = " << totalP2 << endl;
-    cout << "sigmoide(part1) = " << sigmoide(-12) << " PSO = " << executa_PSO(totalP1,22) << endl; 
-    cout << "sigmoide(part2) = " << sigmoide(13.4) << " PSO = " << executa_PSO(totalP2,22) << endl; 
+    cout << "particula1 = " << particula1 << " = " << somaP1 << " PSO = " << executa_PSO(somaP1,200) << "\tsigmoide(part1) = " << sigmoide(executa_PSO(somaP1,200)) << endl;
+    cout << "particula2 = " << particula2 << " = " << somaP2 << " PSO = " << executa_PSO(somaP2,somaP1) << "\tsigmoide(part2) = " << sigmoide(executa_PSO(somaP2,somaP1)) << endl;
+    cout << "particula3 = " << particula3 << " = " << somaP3 << " PSO = " << executa_PSO(somaP3,somaP2) << "\tsigmoide(part3) = " << sigmoide(executa_PSO(somaP3,somaP2)) << endl;
+ 
+    // cout << "sigmoide(part2) = " << sigmoide(13.4) << " PSO = " << executa_PSO(,22) << endl; 
     cout << endl;
 
-    cout << "SHIFT_LEFT " << endl;
+    cout << "SHIFT_LEFT " << "P1 = " << endl;
     cout << particula1 << endl;
-    shift_left(particula1,5);
-    cout << endl << particula2 << endl;
-    shift_left(particula2,5);
+    shift_left(particula1,5,mapa3);
+    cout << endl << "SHIFT_LEFT " << "P2 = " << endl;
+    cout << particula2 << endl;
+    shift_left(particula2,5,mapa3);
 
-    cout << endl << "SHIFT_RIGHT " << endl;
+    cout << endl << "SHIFT_RIGHT P1 = " << endl;
     cout << particula1 << endl;
-    shift_right(particula1,5);
-    cout << endl << particula2 << endl;
-    shift_right(particula2,5);
+    shift_right(particula1,5, mapa3);
+    cout << endl << "SHIFT_RIGHT P2 = " << endl;
+    cout << particula2 << endl;
+    shift_right(particula2,5,mapa3);
     cout << endl;
     
     return 0;
