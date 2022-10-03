@@ -16,7 +16,9 @@
 
 #define numNODES 54
 #define MAX_VIZ 20
+
 const double EULER = 2.71828182845904523536;
+double melhor_global = 200;
 
 using namespace std;
 
@@ -145,7 +147,7 @@ int somatorio(string particula, map<int,pair<int, int>> mapa){
     for(map<int,pair<int, int>>::iterator mp2 = mapa.begin(); mp2!=mapa.end(); mp2++){
         for (int i=0;i<particula.length();i++){
             if (particula[i] == '1' && i == mp2->second.second){
-                soma += mp2->second.second;
+                soma += mp2->second.first;
             }
         }              
     }
@@ -160,12 +162,11 @@ double sigmoide(double somaInd){
 
 ////////////////////
 /* Funcao que executa o algoritmo PSO */
-double executa_PSO(int somaDepth, int somaInd){
+double executa_PSO(double pb, double gb){
     double w = 0.9, fi1 = 0.3, fi2 = 0.5, c1 = 2, c2 = 2;
-    double Pb = (double) somaInd , Gb = (double) somaDepth;
     double v_i = 0;
 
-    return (w * v_i) + (c1 * fi1 * (Pb - v_i)) + (c2 * fi2 * (Gb - v_i));
+    return v_i + (c1 * fi1 * (pb - v_i)) + (c2 * fi2 * (gb - v_i));
 }
 
 ////////////////////
@@ -211,6 +212,44 @@ string shift_right(string particula, int vez, map<int,pair<int, int>> mapa){
         return particula;
 }
 
+char factivel(string particula, map<int,pair<int, int>> folhas, vector<Neighb> neig){
+    char ret = 'S';
+    vector<int> chs;
+    for(map<int,pair<int, int>>::iterator mp2 = folhas.begin(); mp2!=folhas.end(); mp2++){
+        for (int i=0;i<particula.length();i++){
+            if (particula[i] == '1' && i == mp2->second.second){
+                chs.push_back(mp2->first);
+            }
+        }
+    }
+    int count=0,novocount=0;
+    for (int i=0;i<particula.length();i++){
+        for(map<int,pair<int, int>>::iterator mp2 = folhas.begin(); mp2!=folhas.end(); mp2++){
+            if (particula[i] == '0' && i == mp2->second.second){
+                for(vector<Neighb>::iterator ng = neig.begin(); ng!=neig.end(); ng++){
+                    if (mp2->first == ng->nodeID){
+                        // cout << mp2->first << " membro" << endl; // sinaliza a cada novo membro para procurar CHs
+                        for(int j=0; j < ng->nViz; j++){ // cout << ng->vizinhos[j] << " avaliado" << endl;
+                            for(int k=0; k < chs.size(); k++){
+                                if (ng->vizinhos[j] == chs[k]){
+                                    // cout << " CH encontrado " << chs[k] << endl;
+                                    count++;
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+                // cout << count << endl;
+                if (count == 0) return 'N';
+                else count = 0;
+            }
+        }
+    }
+
+    return ret;
+}
+
 ////////////////////
 /* Funcao MAIN */
 int main(int argc, char const *argv[]){
@@ -235,9 +274,9 @@ vector<Neighb> __neighb = read__csv();
 
     int posi=0, somaD=0, somaH=0, somaR=0, medD=0, medH=0, a=0, medR=0, cnt=0;
     int relacaoViz=0;
-    map<int,int> mapa1;
-    map<int, pair<int, int>> mapa2, mapa3;
-    string particula1, particula2, particula3;
+    map<int,int> mapa1;                        // estrutura com nodos e quantidade total de vizinhos
+    map<int, pair<int, int>> mapa2, mapa3;     // estruturas para percorrer posicao da particula [0 a 16]
+    string particula1, particula2, particula3; // representacao das particulas em string binaria do 0 a 16
     map<int,int> lista;
 
     // Procura vizinhos somente de vermelhos
@@ -265,15 +304,14 @@ vector<Neighb> __neighb = read__csv();
             mapa3[it->nodeID] = make_pair(it->somaVizHom,posi);
             mapa2[it->nodeID] = make_pair(it->depth,posi);
             posi++;
-            relacaoViz = abs(it->somaViz - it->somaVizHom);
+            relacaoViz = it->somaViz / it->somaVizHom; // abs(it->somaViz - it->somaVizHom);
             medD = somaD / cnt;
             medH = somaH / cnt;
             somaR += relacaoViz;
             medR = somaR / cnt;
             cout <<  it->nodeID << " \t" << it->depth << " " << "\t" << it->blue << " \t" << it->red << // "\tdifer = " << it->nHet << 
-                " \tsomaD_HET = " << it->somaViz << " \tsomaD_HOM = " << it->somaVizHom << " \tHET/D: " << (double) (it->nHet / it->depth) << // " \tpropDif: " << propDif << " \tpropDepth: " << propDep << 
-                //" \trelacaoViz: " <<  relacaoViz <<
-                endl;
+                " \tsomaD_HET = " << it->somaViz << " \tsomaD_HOM = " << it->somaVizHom << " HET/D: " << (double) (it->nHet / it->depth) << // " \tpropDif: " << propDif << " \tpropDepth: " << propDep << 
+                " relacaoViz: " <<  relacaoViz << endl;
         }
     }
     // Particula 1 define como CH os nodos com somatorio de profundidade maior que a media
@@ -311,31 +349,54 @@ vector<Neighb> __neighb = read__csv();
         }
         d--;
     }
-    int somaP1 = somatorio(particula1,mapa3);
-    int somaP2 = somatorio(particula2,mapa3);
-    int somaP3 = somatorio(particula3,mapa3);
-    cout << "a = " << a << " cnt = " << cnt << " media de vizinhos heterogeneos = " << medH << " media de profundiades = " << medD << " relacao = " << medR << endl;
-    cout << "particula1 = " << particula1 << " = " << somaP1 << " PSO = " << executa_PSO(somaP1,200) << "\tsigmoide(part1) = " << sigmoide(executa_PSO(somaP1,200)) << endl;
-    cout << "particula2 = " << particula2 << " = " << somaP2 << " PSO = " << executa_PSO(somaP2,somaP1) << "\tsigmoide(part2) = " << sigmoide(executa_PSO(somaP2,somaP1)) << endl;
-    cout << "particula3 = " << particula3 << " = " << somaP3 << " PSO = " << executa_PSO(somaP3,somaP2) << "\tsigmoide(part3) = " << sigmoide(executa_PSO(somaP3,somaP2)) << endl;
+    int somaP1 = somatorio(particula1,mapa2);
+    int somaP2 = somatorio(particula2,mapa2);
+    int somaP3 = somatorio(particula3,mapa2);
+    if (somaP1 < melhor_global){
+        melhor_global = somaP1;
+    }
+    if (somaP2 < melhor_global){
+        melhor_global = somaP2;
+    }
+    if (somaP3 < melhor_global){
+        melhor_global = somaP3;
+    }
+    cout << "a = " << a << " cnt = " << cnt << " media de vizinhos heterogeneos = " << medH << " media de profundiades = " << medD << " relacao = " << medR << endl << endl;
+    cout << "melhor_global = " << melhor_global << endl;
+    cout << "particula1 = " << particula1 << " = " << somaP1 << " PSO = " << executa_PSO(somaP1,melhor_global) << "\tsigmoide(part1) = " << sigmoide(executa_PSO(somaP1,melhor_global)) << " fact = " << factivel(particula1,mapa2,__neighb) << endl;
+    cout << "particula2 = " << particula2 << " = " << somaP2 << " PSO = " << executa_PSO(somaP2,melhor_global) << "\tsigmoide(part2) = " << sigmoide(executa_PSO(somaP2,somaP1)) << " fact = " << factivel(particula2,mapa2,__neighb) << endl;
+    cout << "particula3 = " << particula3 << " = " << somaP3 << " PSO = " << executa_PSO(somaP3,melhor_global) << "\tsigmoide(part3) = " << sigmoide(executa_PSO(somaP3,somaP2)) << " fact = " << factivel(particula3,mapa2,__neighb) << endl;
+    cout << "particula4 = " << "1011100110101010" << " = " << somatorio("1011100110101010",mapa2) << " PSO = " << executa_PSO(somatorio("1011100110101010",mapa2),melhor_global) << "\tsigmoide(part3) = " << sigmoide(executa_PSO(somatorio("1011100110101010",mapa2),melhor_global)) << " fact = " << factivel("1011100110101010",mapa2,__neighb) << endl;
+    cout << "particula5 = " << "1111111111111101" << " = " << somatorio("1111111111111101",mapa2) << " PSO = " << executa_PSO(somatorio("1111111111111101",mapa2),melhor_global) << "\tsigmoide(part3) = " << sigmoide(executa_PSO(somatorio("1111111111111101",mapa2),melhor_global)) << " fact = " << factivel("1111111111111101",mapa2,__neighb) << endl;
  
     // cout << "sigmoide(part2) = " << sigmoide(13.4) << " PSO = " << executa_PSO(,22) << endl; 
     cout << endl;
 
     cout << "SHIFT_LEFT " << "P1 = " << endl;
     cout << particula1 << endl;
-    shift_left(particula1,5,mapa3);
+    shift_left(particula1,5,mapa2);
     cout << endl << "SHIFT_LEFT " << "P2 = " << endl;
     cout << particula2 << endl;
-    shift_left(particula2,5,mapa3);
+    shift_left(particula2,5,mapa2);
 
     cout << endl << "SHIFT_RIGHT P1 = " << endl;
     cout << particula1 << endl;
-    shift_right(particula1,5, mapa3);
+    shift_right(particula1,5, mapa2);
     cout << endl << "SHIFT_RIGHT P2 = " << endl;
     cout << particula2 << endl;
-    shift_right(particula2,5,mapa3);
+    shift_right(particula2,5,mapa2);
     cout << endl;
     
+    cout << "v1 = " << sigmoide(5.2) << endl;
+    cout << "v2 = " << sigmoide(-6.1) << endl;
+    cout << "v3 = " << sigmoide(0.5) << endl;
+    cout << "x1 = " << sigmoide(2.4) << endl;
+    cout << "x2 = " << sigmoide(-0.8) << endl;
+    cout << "x3 = " << sigmoide(0.75) << endl;
+    
+    cout << "y1 = " << sigmoide(executa_PSO(5.2,2.4)) << endl;
+    cout << "y2 = " << sigmoide(executa_PSO(-6.1,-0.8)) << endl;
+    cout << "y3 = " << sigmoide(executa_PSO(0.5,0.75)) << endl;
+
     return 0;
 }
